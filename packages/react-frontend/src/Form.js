@@ -14,6 +14,11 @@ function Form(props) {
     else setPerson({ name: value, job: person["job"] });
   }
 
+  function submitForm() {
+    props.handleSubmit(person);
+    setPerson({ name: "", job: "" });
+  }
+
   return (
     <form>
       <label htmlFor="name">Name</label>
