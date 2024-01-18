@@ -1,4 +1,7 @@
 // src/MyApp.js
+import React from "react";
+import Table from "./Table";
+
 const characters = [
   {
     name: "Charlie",
