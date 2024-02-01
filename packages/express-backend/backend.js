@@ -41,6 +41,11 @@ const users = {
   ]
 };
 
+const addUser = (user) => {
+  users["users_list"].push(user);
+  return user;
+};
+
 const findUserByName = (name) => {
   return users["users_list"].filter(
     (user) => user["name"] === name
@@ -49,11 +54,6 @@ const findUserByName = (name) => {
 
 const findUserById = (id) =>
   users["users_list"].find((user) => user["id"] === id);
-
-const addUser = (user) => {
-  users["users_list"].push(user);
-  return user;
-};
 
 app.get("/users", (req, res) => {
   const name = req.query.name;
@@ -78,8 +78,12 @@ app.get("/users/:id", (req, res) => {
 
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
-  addUser(userToAdd);
-  res.send();
+  let result = addUser(userToAdd);
+  if (result === undefined) {
+    res.status(500).send("Unable to add user.")
+  } else {
+    res.status(201).send();
+  }
 });
 
 app.listen(port, () => {
