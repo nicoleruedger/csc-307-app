@@ -4,13 +4,6 @@ import express from "express";
 const app = express();
 const port = 8000;
 
-app.use(cors());
-app.use(express.json());
-
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
 const users = {
   users_list: [
     {
@@ -41,9 +34,17 @@ const users = {
   ]
 };
 
+function generateRandomId() {
+  return Math.floor(Math.random() * 100000); // Number btwn 0 and 99999
+}
+
 const addUser = (user) => {
-  users["users_list"].push(user);
-  return user;
+  const newUser = {
+    id: generateRandomId(),
+    ...user // Existing properties of user
+  };
+  users["users_list"].push(newUser);
+  return newUser;
 };
 
 const findUserByName = (name) => {
@@ -54,6 +55,13 @@ const findUserByName = (name) => {
 
 const findUserById = (id) =>
   users["users_list"].find((user) => user["id"] === id);
+
+app.use(cors());
+app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
 
 app.get("/users", (req, res) => {
   const name = req.query.name;
