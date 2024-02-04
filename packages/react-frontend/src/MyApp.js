@@ -44,14 +44,6 @@ function MyApp() {
       })
   }
 
-  // TODO: Deprecate this function
-//  function removeOneCharacter(index) {
-//    const updated = characters.filter((character, i) => {
-//      return i !== index;
-//    });
-//    setCharacters(updated);
-//  }
-
   function updateList(person) {
     postUser(person)
       .then((res) => {
