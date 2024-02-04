@@ -1,4 +1,3 @@
-### Notes on express-backend component
-* Use `export DEBUG='express:router'` before running to see debug information
-* Use `npm run dev` to run the backend app with nodemon, usually while backend coding
-* Use `npm start` to run the backend app with node, usually when wanting to run the app in the production environment
+# README
+
+To run this app, please run `npm start` from within both the `packages/express-backend` & `packages/react-frontend` directories. 
