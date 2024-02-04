@@ -94,6 +94,18 @@ app.post("/users", (req, res) => {
   }
 });
 
+app.delete("/users/:id", (req, res) => {
+  const id = req.params.id;
+  const userToDelete = findUserById(id);
+  if (userToDelete === undefined) {
+    res.status(404).send("User not found");
+  } else {
+    const index = users["users_list"].indexOf(userToDelete);
+    users["users_list"].splice(index, 1);
+    res.status(200).send("User deleted successfully");
+  }
+});
+
 app.listen(port, () => {
   console.log(
     `Example app listening at http://localhost:${port}`
