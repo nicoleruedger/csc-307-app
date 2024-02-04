@@ -4,6 +4,9 @@ import express from "express";
 const app = express();
 const port = 8000;
 
+app.use(cors());
+app.use(express.json());
+
 const users = {
   users_list: [
     {
@@ -35,7 +38,7 @@ const users = {
 };
 
 function generateRandomId() {
-  return Math.floor(Math.random() * 100000); // Number btwn 0 and 99999
+  return Math.floor(Math.random() * 100000).toString(); // Number btwn 0 and 99999
 }
 
 const addUser = (user) => {
@@ -55,9 +58,6 @@ const findUserByName = (name) => {
 
 const findUserById = (id) =>
   users["users_list"].find((user) => user["id"] === id);
-
-app.use(cors());
-app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -90,7 +90,7 @@ app.post("/users", (req, res) => {
   if (result === undefined) {
     res.status(500).send("Unable to add user.")
   } else {
-    res.status(201).send();
+    res.status(201).send(result);
   }
 });
 
