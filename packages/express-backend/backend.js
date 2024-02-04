@@ -51,9 +51,7 @@ const addUser = (user) => {
 };
 
 const findUserByName = (name) => {
-  return users["users_list"].filter(
-    (user) => user["name"] === name
-  );
+  return users["users_list"].filter((user) => user["name"] === name);
 };
 
 const findUserById = (id) =>
@@ -64,13 +62,20 @@ app.get("/", (req, res) => {
 });
 
 app.get("/users", (req, res) => {
-  const name = req.query.name;
-  if (name != undefined) {
-    let result = findUserByName(name);
-    result = { users_list: result };
-    res.send(result);
+  const { name, job } = req.query; // name = req.query.name, job = req.query.job
+  let filteredUsers = users["users_list"]
+
+  if (name) { // (name != undefined)
+    filteredUsers = filteredUsers.filter((user) => user["name"] === name);
+  }
+  if (job) {
+    filteredUsers = filteredUsers.filter((user) => user["job"] === job);
+  }
+
+  if (filteredUsers.length === 0) {
+    res.status(404).send("No matching users found");
   } else {
-    res.send(users);
+    res.status(200).send({ users_list: filteredUsers });
   }
 });
 
