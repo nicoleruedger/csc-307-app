@@ -73,7 +73,7 @@ app.get("/users", (req, res) => {
   }
 
   if (filteredUsers.length === 0) {
-    res.status(404).send("No matching users found");
+    res.status(404).send("No users found");
   } else {
     res.status(200).send({ users_list: filteredUsers });
   }
@@ -107,7 +107,7 @@ app.delete("/users/:id", (req, res) => {
   } else {
     const index = users["users_list"].indexOf(userToDelete);
     users["users_list"].splice(index, 1);
-    res.status(200).send("User deleted successfully");
+    res.status(204).send("User deleted successfully");
   }
 });
 

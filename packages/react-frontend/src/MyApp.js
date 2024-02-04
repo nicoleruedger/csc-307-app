@@ -5,13 +5,6 @@ import Form from "./Form";
 function MyApp() {
   const [characters, setCharacters] = useState([]);
 
-  function removeOneCharacter(index) {
-    const updated = characters.filter((character, i) => {
-      return i !== index;
-    });
-    setCharacters(updated);
-  }
-
   function fetchUsers() {
       const promise = fetch("http://localhost:8000/users");
       return promise;
@@ -28,6 +21,36 @@ function MyApp() {
 
     return promise;
   }
+
+  function deleteUser(id) {
+    const promise = fetch(`http://localhost:8000/users/${id}`, {
+      method: "DELETE"
+    });
+
+    return promise;
+  }
+
+  function deleteCharacter(id) {
+    deleteUser(id)
+      .then((res) => {
+        if (res.status === 204) { // Successfully deleted on backend, delete on frontend by id
+          setCharacters(characters.filter((character) => character.id !== id));
+        } else if (res.status === 404) {
+          console.log("Resource not found.");
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  }
+
+  // TODO: Deprecate this function
+//  function removeOneCharacter(index) {
+//    const updated = characters.filter((character, i) => {
+//      return i !== index;
+//    });
+//    setCharacters(updated);
+//  }
 
   function updateList(person) {
     postUser(person)
@@ -58,7 +81,7 @@ function MyApp() {
     <div className="container">
       <Table
         characterData={characters}
-        removeCharacter={removeOneCharacter}
+        removeCharacter={deleteCharacter}
       />
       <Form handleSubmit={updateList} />
     </div>
