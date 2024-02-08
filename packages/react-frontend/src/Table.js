@@ -15,11 +15,11 @@ function TableBody(props) {
   const rows = props.characterData.map((row, index) => {
     return (
       <tr key={index}>
-        <td>{row.id}</td>
+        <td>{row._id}</td> {/* Displaying _id instead of id */}
         <td>{row.name}</td>
         <td>{row.job}</td>
         <td>
-          <button onClick={() => props.removeCharacter(row.id)}>
+          <button onClick={() => props.removeCharacter(row._id)}> {/* Pass _id to removeCharacter */}
             Delete
           </button>
         </td>

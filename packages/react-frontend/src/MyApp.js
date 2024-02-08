@@ -34,7 +34,7 @@ function MyApp() {
     deleteUser(id)
       .then((res) => {
         if (res.status === 204) { // Successfully deleted on backend, delete on frontend by id
-          setCharacters(characters.filter((character) => character.id !== id));
+          setCharacters(characters.filter((character) => character._id !== id));
         } else if (res.status === 404) {
           console.log("Resource not found.");
         }
