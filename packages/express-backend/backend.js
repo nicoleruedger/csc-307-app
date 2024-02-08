@@ -1,6 +1,8 @@
 import cors from "cors";
 import express from "express";
 
+import userServices from "./models/user-services.js";
+
 const app = express();
 const port = 8000;
 
@@ -37,14 +39,10 @@ const users = {
   ]
 };
 
-function generateRandomId() {
-  return Math.floor(Math.random() * 100000).toString(); // Number btwn 0 and 99999
-}
-
 const addUser = (user) => {
   const newUser = {
-    id: generateRandomId(),
-    ...user // Existing properties of user
+    id: Math.floor(Math.random() * 100000).toString(),
+    ...user
   };
   users["users_list"].push(newUser);
   return newUser;
@@ -61,42 +59,32 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.get("/users", (req, res) => {
-  const { name, job } = req.query; // name = req.query.name, job = req.query.job
-  let filteredUsers = users["users_list"]
-
-  if (name) { // (name != undefined)
-    filteredUsers = filteredUsers.filter((user) => user["name"] === name);
-  }
-  if (job) {
-    filteredUsers = filteredUsers.filter((user) => user["job"] === job);
-  }
-
-  if (filteredUsers.length === 0) {
-    res.status(404).send("No users found");
-  } else {
-    res.status(200).send({ users_list: filteredUsers });
+app.get("/users", async (req, res) => {
+  const { name, job } = req.query;
+  try {
+    const result = await userServices.getUsers(name, job);
+    res.send({ users_list: result });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("An error occurred in the server.");
   }
 });
 
-app.get("/users/:id", (req, res) => {
-  const id = req.params["id"]; //or req.params.id
-  let result = findUserById(id);
-  if (result === undefined) {
+app.get("/users/:id", async (req, res) => {
+  const id = req.params["id"];
+  const result = await userServices.findUserById(id)
+  if (result === undefined || result === null)
     res.status(404).send("Resource not found.");
-  } else {
-    res.send(result);
+  else {
+    res.send({ users_list: result });
   }
 });
 
-app.post("/users", (req, res) => {
-  const userToAdd = req.body;
-  let result = addUser(userToAdd);
-  if (result === undefined) {
-    res.status(500).send("Unable to add user.")
-  } else {
-    res.status(201).send(result);
-  }
+app.post("/users", async (req, res) => {
+  const user = req.body;
+  const savedUser = await userServices.addUser(user);
+  if (savedUser) res.status(201).send(savedUser);
+  else res.status(500).end();
 });
 
 app.delete("/users/:id", (req, res) => {
